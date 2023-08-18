@@ -3,6 +3,7 @@ package ru.effective_mobile.social_media_api.entity;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(schema = "social_media", name = "user")
@@ -15,10 +16,12 @@ public class User {
 
     private String email;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "user")
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "friendId.user")
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "friendId.user")
     private List<Friend> friends;
 
     public Integer getId() {
@@ -59,5 +62,14 @@ public class User {
 
     public void setFriends(List<Friend> friends) {
         this.friends = friends;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Entity
 @Table(schema = "social_media", name = "post")
@@ -85,5 +86,18 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", header='" + header + '\'' +
+                ", text='" + text + '\'' +
+                ", image=" + Arrays.toString(image) +
+                ", createDate=" + createDate +
+                ", updateDate=" + updateDate +
+                ", user=" + user +
+                '}';
     }
 }

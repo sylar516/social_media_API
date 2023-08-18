@@ -41,4 +41,12 @@ public class FriendId implements Serializable {
     public int hashCode() {
         return Objects.hash(user, friend);
     }
+
+    @Override
+    public String toString() {
+        return "FriendId{" +
+                "user=" + user +
+                ", friend=" + friend +
+                '}';
+    }
 }
