@@ -1,12 +1,14 @@
 package ru.effective_mobile.social_media_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(schema = "social_media", name = "user")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "name")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,13 +18,13 @@ public class User {
 
     private String email;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany(fetch = FetchType.LAZY,
             mappedBy = "user")
     private List<Post> posts;
 
-    @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "friendId.user")
-    private List<Friend> friends;
+//    @OneToMany(fetch = FetchType.LAZY,
+//            mappedBy = "friendId.user")
+//    private List<Friend> friends;
 
     public Integer getId() {
         return id;
@@ -56,13 +58,13 @@ public class User {
         this.posts = posts;
     }
 
-    public List<Friend> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<Friend> friends) {
-        this.friends = friends;
-    }
+//    public List<Friend> getFriends() {
+//        return friends;
+//    }
+//
+//    public void setFriends(List<Friend> friends) {
+//        this.friends = friends;
+//    }
 
     @Override
     public String toString() {
