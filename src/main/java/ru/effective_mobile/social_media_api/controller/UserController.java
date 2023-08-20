@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.effective_mobile.social_media_api.entity.User;
+import ru.effective_mobile.social_media_api.dto.UserDto;
 import ru.effective_mobile.social_media_api.service.UserService;
 
 import java.util.List;
@@ -19,12 +19,12 @@ public class UserController {
         this.userService = userService;
     }
     @GetMapping("/")
-    public List<User> allUsers() {
+    public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") int id) {
-        return userService.getUser(id);
+    public UserDto getUserById(@PathVariable("id") int id) {
+        return userService.getUserById(id);
     }
 }
