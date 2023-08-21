@@ -46,6 +46,8 @@ public class MessageDto {
         }
     }
 
+    public MessageDto() {}
+
     public MessageDto(Builder builder) {
         this.text = builder.text;
         this.sendDate = builder.sendDate;
