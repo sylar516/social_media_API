@@ -62,6 +62,8 @@ public class PostDto {
         }
     }
 
+    public PostDto() {}
+
     public PostDto(Builder builder) {
         this.header = builder.header;
         this.text = builder.text;

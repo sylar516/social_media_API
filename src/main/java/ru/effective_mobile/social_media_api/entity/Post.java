@@ -2,6 +2,7 @@ package ru.effective_mobile.social_media_api.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class Post {
     private LocalDateTime createDate;
 
     @Column(name = "update_date")
+    @UpdateTimestamp
     private LocalDateTime updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
