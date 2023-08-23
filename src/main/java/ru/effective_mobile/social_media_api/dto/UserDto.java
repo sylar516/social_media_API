@@ -9,7 +9,7 @@ public class UserDto {
 
     private List<PostDto> posts;
 
-    private List<FriendDto> friends;
+    private List<RelationshipDto> relationships;
 
     public static Builder builder() {
         return new Builder();
@@ -19,7 +19,7 @@ public class UserDto {
         private String name;
         private String email;
         private List<PostDto> posts;
-        private List<FriendDto> friends;
+        private List<RelationshipDto> relationships;
 
         public Builder setName(String name) {
             this.name = name;
@@ -36,8 +36,8 @@ public class UserDto {
             return this;
         }
 
-        public Builder setFriends(List<FriendDto> friends) {
-            this.friends = friends;
+        public Builder setRelationships(List<RelationshipDto> relationships) {
+            this.relationships = relationships;
             return this;
         }
 
@@ -46,11 +46,14 @@ public class UserDto {
         }
     }
 
+    public UserDto() {
+    }
+
     public UserDto(Builder builder) {
         this.name = builder.name;
         this.email = builder.email;
         this.posts = builder.posts;
-        this.friends = builder.friends;
+        this.relationships = builder.relationships;
     }
 
     public String getName() {
@@ -77,11 +80,11 @@ public class UserDto {
         this.posts = posts;
     }
 
-    public List<FriendDto> getFriends() {
-        return friends;
+    public List<RelationshipDto> getRelationships() {
+        return relationships;
     }
 
-    public void setFriends(List<FriendDto> friends) {
-        this.friends = friends;
+    public void setRelationships(List<RelationshipDto> relationships) {
+        this.relationships = relationships;
     }
 }

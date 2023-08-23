@@ -15,13 +15,15 @@ public class User {
 
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY,
+    @OneToMany(cascade = CascadeType.REMOVE,
+            fetch = FetchType.LAZY,
             mappedBy = "user")
     private List<Post> posts;
 
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "friendId.user")
-    private List<Friend> friends;
+    @OneToMany(cascade = CascadeType.REMOVE,
+            fetch = FetchType.LAZY,
+            mappedBy = "relationshipId.user1")
+    private List<Relationship> relationships;
 
     public Integer getId() {
         return id;
@@ -55,20 +57,11 @@ public class User {
         this.posts = posts;
     }
 
-    public List<Friend> getFriends() {
-        return friends;
+    public List<Relationship> getRelationships() {
+        return relationships;
     }
 
-    public void setFriends(List<Friend> friends) {
-        this.friends = friends;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public void setRelationships(List<Relationship> relationships) {
+        this.relationships = relationships;
     }
 }
