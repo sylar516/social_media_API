@@ -43,7 +43,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    public Integer createMessage(MessageDto messageDto) {
+    public Integer sendMessage(MessageDto messageDto) {
         Message message = dtoToMessage(messageDto);
         messageRepository.save(message);
         return message.getId();
@@ -51,22 +51,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    public void updateMessage(Integer id, MessageDto messageDto) {
-        Message message = dtoToMessage(messageDto);
-        message.setId(id);
-        messageRepository.save(message);
-    }
-
-    @Override
-    @Transactional
     public void deleteMessageById(Integer id) {
         messageRepository.deleteById(id);
-    }
-
-    @Override
-    @Transactional
-    public void deleteAllMessages() {
-        messageRepository.deleteAll();
     }
 
     static List<MessageDto> messageListToDto(List<Message> messages) {
