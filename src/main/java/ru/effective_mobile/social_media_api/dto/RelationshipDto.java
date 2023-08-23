@@ -3,9 +3,9 @@ package ru.effective_mobile.social_media_api.dto;
 import ru.effective_mobile.social_media_api.entity.Status;
 
 public class RelationshipDto {
-    private Integer user1Id;
+    private Integer senderId;
 
-    private Integer user2Id;
+    private Integer receiverId;
 
     private Status status;
 
@@ -14,17 +14,17 @@ public class RelationshipDto {
     }
 
     public static class Builder {
-        private Integer user1Id;
-        private Integer user2Id;
+        private Integer senderId;
+        private Integer receiverId;
         private Status status;
 
-        public Builder setUser1Id(Integer userId) {
-            this.user1Id = userId;
+        public Builder setSenderId(Integer senderId) {
+            this.senderId = senderId;
             return this;
         }
 
-        public Builder setUser2Id(Integer userId) {
-            this.user2Id = userId;
+        public Builder setReceiverId(Integer receiverId) {
+            this.receiverId = receiverId;
             return this;
         }
 
@@ -42,25 +42,25 @@ public class RelationshipDto {
     }
 
     public RelationshipDto(Builder builder) {
-        this.user1Id = builder.user1Id;
-        this.user2Id = builder.user2Id;
+        this.senderId = builder.senderId;
+        this.receiverId = builder.receiverId;
         this.status = builder.status;
     }
 
-    public Integer getUser1Id() {
-        return user1Id;
+    public Integer getSenderId() {
+        return senderId;
     }
 
-    public void setUser1Id(Integer user1Id) {
-        this.user1Id = user1Id;
+    public void setSenderId(Integer senderId) {
+        this.senderId = senderId;
     }
 
-    public Integer getUser2Id() {
-        return user2Id;
+    public Integer getReceiverId() {
+        return receiverId;
     }
 
-    public void setUser2Id(Integer user2Id) {
-        this.user2Id = user2Id;
+    public void setReceiverId(Integer receiverId) {
+        this.receiverId = receiverId;
     }
 
     public Status getStatus() {

@@ -1,6 +1,7 @@
 package ru.effective_mobile.social_media_api.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.effective_mobile.social_media_api.entity.Relationship;
@@ -14,4 +15,8 @@ public interface RelationshipRepository extends JpaRepository<Relationship, Rela
 
     @Query("from Relationship where relationshipId.user1.id in (:sender_id, :receiver_id) and relationshipId.user2.id in (:sender_id, :receiver_id)")
     Relationship findRelationshipByUsers(@Param("sender_id") int senderId, @Param("receiver_id") int receiverId);
+
+    @Modifying
+    @Query("delete from Relationship where relationshipId.user1.id = :user_id or relationshipId.user2.id = :user_id")
+    void deleteRelationshipsByUser(@Param("user_id") int userId);
 }
