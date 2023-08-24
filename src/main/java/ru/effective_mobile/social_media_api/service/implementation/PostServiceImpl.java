@@ -1,22 +1,22 @@
 package ru.effective_mobile.social_media_api.service.implementation;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import ru.effective_mobile.social_media_api.dto.PostDto;
 import ru.effective_mobile.social_media_api.entity.Post;
 import ru.effective_mobile.social_media_api.entity.User;
 import ru.effective_mobile.social_media_api.repository.PostRepository;
+import ru.effective_mobile.social_media_api.repository.RelationshipRepository;
 import ru.effective_mobile.social_media_api.repository.UserRepository;
 import ru.effective_mobile.social_media_api.service.PostService;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
-import static java.util.Objects.isNull;
+import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -24,9 +24,12 @@ public class PostServiceImpl implements PostService {
 
     private UserRepository userRepository;
 
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
+    private RelationshipRepository relationshipRepository;
+
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, RelationshipRepository relationshipRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.relationshipRepository = relationshipRepository;
     }
 
     @Override
@@ -44,12 +47,30 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public List<PostDto> getAllPostsByUser(int userId) {
-        return postListToDto(postRepository.getAllByUserId(userId));
+        return postListToDto(postRepository.getAllPostsByUserId(userId));
     }
 
     @Override
     @Transactional
-    public Integer createPost(PostDto postDto) {
+    public List<PostDto> getUserFeed(int userId, int page, int limit) {
+        List<Integer> userIds = relationshipRepository.findUserIdsBySubscriber(userId);
+        List<Post> postsByUserIds = postRepository.getPostsByUserIds(userIds);
+        List<Post> feedPosts = new ArrayList<>();
+        for (Integer userId1 : userIds) {
+            List<Post> postsByUserId = postsByUserIds.stream().filter(post -> post.getUser().getId().equals(userId1)).toList();
+            postsByUserId.stream().max(Comparator.comparing(Post::getCreateDate)).ifPresent(feedPosts::add);
+        }
+
+        feedPosts.sort((post1, post2) -> post2.getCreateDate().compareTo(post1.getCreateDate()));
+        int offset = (page - 1) * limit;
+        List<Post> feedPostsLimit = feedPosts.stream().skip(offset).limit(limit).toList();
+
+        return postListToDto(feedPostsLimit);
+    }
+
+    @Override
+    @Transactional
+    public Integer publishPost(PostDto postDto) {
         Post post = dtoToPost(postDto);
         postRepository.save(post);
         return post.getId();
@@ -57,11 +78,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void updatePost(Integer id, PostDto postDto) {
-        Post post = postRepository.findById(id).get();
-        if (!isNull(postDto.getHeader())) post.setHeader(postDto.getHeader());
-        if (!isNull(postDto.getText())) post.setText(postDto.getText());
-        if (!isNull(postDto.getImage())) post.setImage(postDto.getImage());
+    public void editPost(Integer id, PostDto postDto) {
+        Post post = dtoToPost(postDto);
+        post.setId(id);
         postRepository.save(post);
     }
 
@@ -71,7 +90,7 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(id);
     }
 
-    static List<PostDto> postListToDto(List<Post> posts) {
+    private List<PostDto> postListToDto(List<Post> posts) {
         List<PostDto> postDtos = new ArrayList<>();
         posts.forEach(
                 post -> {
