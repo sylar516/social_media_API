@@ -1,14 +1,19 @@
 package ru.effective_mobile.social_media_api.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 import java.time.LocalDateTime;
 
 public class MessageDto {
+    @NotBlank(message = "message cannot be empty")
     private String text;
 
     private LocalDateTime sendDate;
-
+    @Positive(message = "senderId cannot be zero or negative")
     private Integer senderId;
 
+    @Positive(message = "receiverId cannot be zero or negative")
     private Integer receiverId;
 
     public static Builder builder() {

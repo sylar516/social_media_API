@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.effective_mobile.social_media_api.dto.MessageDto;
 import ru.effective_mobile.social_media_api.entity.Message;
 import ru.effective_mobile.social_media_api.entity.User;
+import ru.effective_mobile.social_media_api.exception.NotFoundException;
 import ru.effective_mobile.social_media_api.repository.MessageRepository;
 import ru.effective_mobile.social_media_api.repository.UserRepository;
 import ru.effective_mobile.social_media_api.service.MessageService;
@@ -27,7 +28,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public MessageDto getMessageById(int id) {
-        return messageToDto(messageRepository.findById(id).get());
+        return messageToDto(messageRepository.findById(id).orElseThrow(() -> new NotFoundException("message with id = %d not found".formatted(id))));
     }
 
     @Override
@@ -37,7 +38,10 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional
     public List<MessageDto> getMessagesByUsers(int senderId, int receiverId) {
+        userRepository.findById(senderId).orElseThrow(() -> new NotFoundException("user with id = %d not found".formatted(senderId)));
+        userRepository.findById(receiverId).orElseThrow(() -> new NotFoundException("user with id = %d not found".formatted(receiverId)));
         return messageListToDto(messageRepository.findMessagesByUsers(senderId, receiverId));
     }
 
@@ -52,6 +56,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public void deleteMessageById(Integer id) {
+        messageRepository.findById(id).orElseThrow(() -> new NotFoundException("message with id = %d not found".formatted(id)));
         messageRepository.deleteById(id);
     }
 
@@ -82,8 +87,8 @@ public class MessageServiceImpl implements MessageService {
 
     private Message dtoToMessage(MessageDto messageDto) {
         Message message = new Message();
-        User sender = userRepository.findById(messageDto.getSenderId()).get();
-        User receiver = userRepository.findById(messageDto.getReceiverId()).get();
+        User sender = userRepository.findById(messageDto.getSenderId()).orElseThrow(() -> new NotFoundException("user with id = %d not found".formatted(messageDto.getSenderId())));
+        User receiver = userRepository.findById(messageDto.getReceiverId()).orElseThrow(() -> new NotFoundException("user with id = %d not found".formatted(messageDto.getReceiverId())));
 
         message.setText(messageDto.getText());
         message.setSendDate(LocalDateTime.now());

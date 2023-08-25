@@ -7,9 +7,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import ru.effective_mobile.social_media_api.dto.MessageDto;
-import ru.effective_mobile.social_media_api.dto.UserDto;
 import ru.effective_mobile.social_media_api.service.MessageService;
 
 import java.util.List;
@@ -134,7 +134,7 @@ public class MessageController {
                     examples = @ExampleObject(name = "Message id",value = "5")))
     @Operation(summary = "Отправить сообщение пользователю")
     @PostMapping("/send")
-    public int sendMessage(@RequestBody MessageDto messageDto) {
+    public int sendMessage(@Valid @RequestBody MessageDto messageDto) {
         return messageService.sendMessage(messageDto);
     }
 
