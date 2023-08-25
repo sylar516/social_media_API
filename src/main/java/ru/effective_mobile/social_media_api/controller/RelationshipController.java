@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import ru.effective_mobile.social_media_api.dto.RelationshipDto;
+import ru.effective_mobile.social_media_api.dto.RelationshipIdDto;
 import ru.effective_mobile.social_media_api.service.RelationshipService;
 
 import java.util.List;
@@ -54,7 +56,7 @@ public class RelationshipController {
     @ApiResponse(responseCode = "200", description = "ОК",
             content = @Content(
                     schema = @Schema(implementation = RelationshipDto.class),
-                    examples = @ExampleObject(value = """
+                    examples = @ExampleObject(name = "Relationships",value = """
                             [
                               {
                                 "senderId": 1,
@@ -78,13 +80,12 @@ public class RelationshipController {
             required = true,
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = RelationshipDto.class),
+                    schema = @Schema(implementation = RelationshipIdDto.class),
                     examples = @ExampleObject(
                             value = """
                                     {
                                       "senderId": 1,
-                                      "receiverId": 2,
-                                      "status": "FRIEND_REQUEST"
+                                      "receiverId": 2
                                     }
                                     """)
             )
@@ -95,21 +96,20 @@ public class RelationshipController {
                     examples = @ExampleObject(value = "Заявка в друзья пользователю Alex отправлена")))
     @Operation(summary = "Отправить заявку в друзья от одного пользователя(senderId) к другому(receiverId)")
     @PostMapping("/send_request")
-    public String sendRequestFriend(@RequestBody RelationshipDto relationshipDto) {
-        return relationshipService.sendRequestFriend(relationshipDto);
+    public String sendRequestFriend(@Valid @RequestBody RelationshipIdDto relationshipIdDto) {
+        return relationshipService.sendRequestFriend(relationshipIdDto);
     }
 
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = RelationshipDto.class),
+                    schema = @Schema(implementation = RelationshipIdDto.class),
                     examples = @ExampleObject(
                             value = """
                                     {
                                       "senderId": 1,
-                                      "receiverId": 2,
-                                      "status": "FRIENDS"
+                                      "receiverId": 2
                                     }
                                     """)
             )
@@ -120,21 +120,20 @@ public class RelationshipController {
                     examples = @ExampleObject(value = "Теперь пользователь Ivan у вас в друзьях")))
     @Operation(summary = "Принять заявку в друзья от пользователя(senderId)")
     @PostMapping("/accept_request")
-    public String acceptRequestFriend(@RequestBody RelationshipDto relationshipDto) {
-        return relationshipService.acceptRequestFriend(relationshipDto);
+    public String acceptRequestFriend(@Valid @RequestBody RelationshipIdDto relationshipIdDto) {
+        return relationshipService.acceptRequestFriend(relationshipIdDto);
     }
 
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = RelationshipDto.class),
+                    schema = @Schema(implementation = RelationshipIdDto.class),
                     examples = @ExampleObject(
                             value = """
                                     {
                                       "senderId": 1,
-                                      "receiverId": 3,
-                                      "status": "SUBSCRIBER"
+                                      "receiverId": 3
                                     }
                                     """)
             )
@@ -145,21 +144,20 @@ public class RelationshipController {
                     examples = @ExampleObject(value = "Вы отклонили заявку в друзья от пользователя Ivan")))
     @Operation(summary = "Отклонить заявку в друзья от пользователя(senderId)")
     @PostMapping("/reject_request")
-    public String rejectRequestFriend(@RequestBody RelationshipDto relationshipDto) {
-        return relationshipService.rejectRequestFriend(relationshipDto);
+    public String rejectRequestFriend(@Valid @RequestBody RelationshipIdDto relationshipIdDto) {
+        return relationshipService.rejectRequestFriend(relationshipIdDto);
     }
 
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = RelationshipDto.class),
+                    schema = @Schema(implementation = RelationshipIdDto.class),
                     examples = @ExampleObject(
                             value = """
                                     {
                                       "senderId": 1,
-                                      "receiverId": 3,
-                                      "status": "SUBSCRIBER"
+                                      "receiverId": 3
                                     }
                                     """)
             )
@@ -170,21 +168,20 @@ public class RelationshipController {
                     examples = @ExampleObject(value = "Вы отписались от пользователя Vladimir")))
     @Operation(summary = "Отписаться от пользователя(receiverId)")
     @DeleteMapping("/unsubscribe")
-    public String unsubscribe(@RequestBody RelationshipDto relationshipDto) {
-        return relationshipService.unsubscribe(relationshipDto);
+    public String unsubscribe(@Valid @RequestBody RelationshipIdDto relationshipIdDto) {
+        return relationshipService.unsubscribe(relationshipIdDto);
     }
 
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = RelationshipDto.class),
+                    schema = @Schema(implementation = RelationshipIdDto.class),
                     examples = @ExampleObject(
                             value = """
                                     {
                                       "senderId": 2,
-                                      "receiverId": 1,
-                                      "status": "FRIENDS"
+                                      "receiverId": 1
                                     }
                                     """)
             )
@@ -195,7 +192,7 @@ public class RelationshipController {
                     examples = @ExampleObject(value = "Вы удалили пользователя Ivan из друзей")))
     @Operation(summary = "Удалить пользователя из друзей")
     @DeleteMapping("/delete_friend")
-    public String deleteFriend(@RequestBody RelationshipDto relationshipDto) {
-        return relationshipService.deleteFriend(relationshipDto);
+    public String deleteFriend(@Valid @RequestBody RelationshipIdDto relationshipIdDto) {
+        return relationshipService.deleteFriend(relationshipIdDto);
     }
 }

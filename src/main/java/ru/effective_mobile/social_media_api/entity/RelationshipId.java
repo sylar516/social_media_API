@@ -42,7 +42,7 @@ public class RelationshipId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RelationshipId relationshipId = (RelationshipId) o;
-        return user1.equals(relationshipId.user1) && user2.equals(relationshipId.user2);
+        return user1.getId().equals(relationshipId.user1.getId()) && user2.getId().equals(relationshipId.user2.getId());
     }
 
     @Override
