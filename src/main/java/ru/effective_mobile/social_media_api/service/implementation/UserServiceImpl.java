@@ -5,10 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.effective_mobile.social_media_api.dto.PostDto;
 import ru.effective_mobile.social_media_api.dto.RelationshipDto;
 import ru.effective_mobile.social_media_api.dto.UserDto;
+import ru.effective_mobile.social_media_api.dto.UserDataDto;
 import ru.effective_mobile.social_media_api.entity.Post;
 import ru.effective_mobile.social_media_api.entity.Relationship;
 import ru.effective_mobile.social_media_api.entity.RelationshipId;
 import ru.effective_mobile.social_media_api.entity.User;
+import ru.effective_mobile.social_media_api.exception.NotFoundException;
 import ru.effective_mobile.social_media_api.repository.MessageRepository;
 import ru.effective_mobile.social_media_api.repository.RelationshipRepository;
 import ru.effective_mobile.social_media_api.repository.UserRepository;
@@ -41,28 +43,28 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto getUserById(int id) {
-        return userToDto(userRepository.findById(id).get());
+        return userToDto(userRepository.findById(id).orElseThrow(() -> new NotFoundException("user with id = %d not found".formatted(id))));
     }
 
     @Override
     @Transactional
-    public Integer createUser(UserDto userDto) {
-        User user = dtoToUser(userDto);
+    public Integer createUser(UserDataDto userDataDto) {
+        User user = dtoToUser(userDataDto);
         userRepository.save(user);
         return user.getId();
     }
 
     @Override
     @Transactional
-    public void updateUser(Integer id, UserDto userDto) {
-        User user = dtoToUser(userDto);
-        user.setId(id);
+    public void updateUser(Integer id, UserDataDto userDataDto) {
+        User user = dtoToUser(id, userDataDto);
         userRepository.save(user);
     }
 
     @Override
     @Transactional
     public void deleteUserById(Integer id) {
+        userRepository.findById(id).orElseThrow(() -> new NotFoundException("user with id = %d not found".formatted(id)));
         messageRepository.deleteMessagesBySender(id);
         relationshipRepository.deleteRelationshipsByUser(id);
         userRepository.deleteById(id);
@@ -177,12 +179,20 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    private User dtoToUser(UserDto userDto) {
+    private User dtoToUser(UserDataDto userDataDto) {
         User user = new User();
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setPosts(dtoListToPost(userDto.getPosts()));
-        user.setRelationships(dtoListToRelationship(userDto.getRelationships()));
+        user.setName(userDataDto.getName());
+        user.setEmail(userDataDto.getEmail());
+//        user.setPosts(dtoListToPost(userDto.getPosts()));
+//        user.setRelationships(dtoListToRelationship(userDto.getRelationships()));
+
+        return user;
+    }
+
+    private User dtoToUser(int id, UserDataDto userDataDto) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("user with id = %d not found".formatted(id)));
+        user.setName(userDataDto.getName());
+        user.setEmail(userDataDto.getEmail());
 
         return user;
     }

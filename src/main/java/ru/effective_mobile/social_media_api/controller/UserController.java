@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+import ru.effective_mobile.social_media_api.dto.UserDataDto;
 import ru.effective_mobile.social_media_api.dto.UserDto;
 import ru.effective_mobile.social_media_api.service.UserService;
 
@@ -28,7 +30,7 @@ public class UserController {
             content = @Content(
                     schema = @Schema(implementation = UserDto.class),
                     mediaType = "application/json",
-                    examples = @ExampleObject(name = "User",value = """
+                    examples = @ExampleObject(name = "Users",value = """
                             [
                               {
                                 "name": "Ivan",
@@ -125,7 +127,7 @@ public class UserController {
                               ],
                               "relationships": []
                             }
-                                                                    """)))
+                            """)))
     @Operation(summary = "Получить пользователя с указанным id")
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable("id") @Parameter(name = "id", description = "User ID", example = "3") int id) {
@@ -152,8 +154,8 @@ public class UserController {
                     examples = @ExampleObject(name = "User id",value = "4")))
     @Operation(summary = "Создать пользователя")
     @PostMapping("/create")
-    public Integer createUser(@RequestBody UserDto userDto) {
-        return userService.createUser(userDto);
+    public Integer createUser(@Valid @RequestBody UserDataDto userDataDto) {
+        return userService.createUser(userDataDto);
     }
 
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -172,8 +174,8 @@ public class UserController {
     )
     @Operation(summary = "Изменить данные пользователя с указанным id")
     @PostMapping("/update/{id}")
-    public void updateUser(@PathVariable("id") @Parameter(name = "id", description = "User ID", example = "3") Integer id, @RequestBody UserDto userDto) {
-        userService.updateUser(id, userDto);
+    public void updateUser(@PathVariable("id") @Parameter(name = "id", description = "User ID", example = "3") Integer id, @Valid @RequestBody UserDataDto userDataDto) {
+        userService.updateUser(id, userDataDto);
     }
 
     @Operation(summary = "Удалить пользователя по id")
