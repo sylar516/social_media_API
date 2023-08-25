@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import ru.effective_mobile.social_media_api.dto.MessageDto;
 import ru.effective_mobile.social_media_api.dto.PostDto;
@@ -201,7 +202,7 @@ public class PostController {
                     examples = @ExampleObject(name = "Post id",value = "10")))
     @Operation(summary = "Опубликовать пост")
     @PostMapping("/publish")
-    public Integer publishPost(@RequestBody PostDto postDto) {
+    public Integer publishPost(@Valid @RequestBody PostDto postDto) {
         return postService.publishPost(postDto);
     }
 
@@ -222,7 +223,7 @@ public class PostController {
     )
     @Operation(summary = "Редактировать пост")
     @PostMapping("/edit/{id}")
-    public void editPost(@PathVariable("id") @Parameter(name = "id", description = "Post ID", example = "25") Integer id, @RequestBody PostDto postDto) {
+    public void editPost(@PathVariable("id") @Parameter(name = "id", description = "Post ID", example = "25") Integer id, @Valid @RequestBody PostDto postDto) {
         postService.editPost(id, postDto);
     }
 

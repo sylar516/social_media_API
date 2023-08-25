@@ -1,10 +1,15 @@
 package ru.effective_mobile.social_media_api.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 import java.time.LocalDateTime;
 
 public class PostDto {
+    @NotBlank(message = "header cannot be empty")
     private String header;
 
+    @NotBlank(message = "text cannot be empty")
     private String text;
 
     private byte[] image;
@@ -13,6 +18,7 @@ public class PostDto {
 
     private LocalDateTime updateDate;
 
+    @Positive(message = "userId cannot be zero or negative")
     private Integer userId;
 
     public static Builder builder() {
